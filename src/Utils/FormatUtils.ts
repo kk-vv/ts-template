@@ -1,5 +1,3 @@
-import { Hash } from "viem"
-
 export namespace FormatUtils {
 
   export function toUnits(src: number | string | bigint, decimal: number = 9): bigint {
@@ -72,7 +70,166 @@ export namespace FormatUtils {
     return text.replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/, "")
   }
 
-  export function hexToAddress(hex: string): Hash {
-    return `0x${hex.slice(-40)}`.toLowerCase() as Hash
+  export function formatTokenPrice(price: string | number | undefined | null, placeholder: string = '--') {
+    if (price !== undefined && price !== null) {
+      return '$' + shitNumber(price)
+    }
+    return placeholder
   }
+
+  ///with currency symbol compact by k M B T P E 
+  export function formatMCap(amount: string | number | undefined | null, symbol: string = '$', placeholder: string = '--') {
+    if (amount !== undefined && amount !== null) {
+      return symbol + formatQuantity(amount)
+    }
+    return placeholder
+  }
+
+  /// compact by k M B T P E or shitnumber
+  export function formatQuantity(balance: string | number | undefined | null, placeholder: string = '--') {
+    if (balance !== undefined && balance !== null) {
+      let num = 0
+      if (typeof (balance) === 'string') {
+        const value = Number(balance)
+        if (isNaN(value)) {
+          return '0'
+        }
+        num = value
+      } else {
+        num = balance
+      }
+
+      if (num > 1) {
+        return compactNumber(balance, 2)
+      } else {
+        return shitNumber(num)
+      }
+    }
+    return placeholder
+  }
+
+  export function formatTokenSupply(supply: string | number) {
+    return compactNumber(supply, 0)
+  }
+
+  export function shitNumber(number: string | number, tailValidNumberCount: number = 4, limitZeroCount: number = 4) {
+    let num = 0
+    if (typeof (number) === 'string') {
+      const value = Number(number)
+      if (isNaN(value)) {
+        return '0'
+      }
+      num = value
+    } else {
+      num = number
+    }
+
+    if (num > 1) {
+      return removeDecimalTailZeros(num.toFixed(2))
+    } else {
+      const numStr = num.toString()
+      const matchGroups = numStr.match(/(\d)\.(\d+)[e|E]-(\d+)/)
+      if (matchGroups && matchGroups.length === 4) { //scientist number
+        let tail = matchGroups[1] + matchGroups[2]
+        if (tail.length > tailValidNumberCount) {
+          tail = tail.substring(0, tailValidNumberCount)
+        }
+        let fixStr = '0.' + '0'.repeat(Number(matchGroups[3]) - 1) + tail
+        if ((Number(matchGroups[3]) - 1) > limitZeroCount) {
+          fixStr = '0.0' + `{${Number(matchGroups[3]) - 1}}` + tail
+        }
+        return removeDecimalTailZeros(fixStr)
+      } else {
+        const matchGroups = numStr.match(/0\.(0+)([1-9]+[0]*[1-9]+)/)
+        if (matchGroups && matchGroups.length === 3) {
+          const zeroCount = matchGroups[1].length
+          let tail = matchGroups[2]
+          if (tail.length > tailValidNumberCount) {
+            tail = tail.substring(0, tailValidNumberCount)
+          }
+          let fixStr = '0.' + '0'.repeat(zeroCount) + tail
+          if (zeroCount > limitZeroCount) {
+            fixStr = '0.0' + `{${zeroCount}}` + tail
+          }
+          fixStr = removeDecimalTailZeros(fixStr)
+          if (numStr.startsWith('-')) {
+            fixStr = '-' + fixStr
+          }
+          return fixStr
+        } else {
+          return removeDecimalTailZeros(num.toFixed(tailValidNumberCount))
+        }
+      }
+    }
+  }
+
+  export function compactNumber(number: string | number, digits: number = 2) {
+    if (number === undefined || number === null) {
+      return ''
+    }
+    let num = 0
+    if (typeof (number) === 'string') {
+      const value = Number(number)
+      if (isNaN(value)) {
+        return number
+      }
+      num = value
+    } else {
+      num = number
+    }
+    const lookup = [
+      { value: 1, symbol: "" },
+      { value: 1e3, symbol: "k" },
+      { value: 1e6, symbol: "M" },
+      { value: 1e9, symbol: "B" },
+      { value: 1e12, symbol: "T" },
+      { value: 1e15, symbol: "P" },
+      { value: 1e18, symbol: "E" }
+    ]
+    const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/
+    const item = lookup.findLast(item => num >= item.value)
+    return item ? (num / item.value).toFixed(digits).replace(regexp, "").concat(item.symbol) : "0"
+  }
+
+  export function fixToSubSymbol(v: string) {
+    const subscriptMap: { [key: string]: string } = {
+      '0': '₀',
+      '1': '₁',
+      '2': '₂',
+      '3': '₃',
+      '4': '₄',
+      '5': '₅',
+      '6': '₆',
+      '7': '₇',
+      '8': '₈',
+      '9': '₉'
+    }
+    return v.replace(/\{(\d+)\}/g, (_, p1: string) => {
+      return p1.split('').map(digit => subscriptMap[digit] || digit).join('')
+    })
+  }
+
+  export function toTradingViewNumber(text: string | number) {
+    return fixToSubSymbol(shitNumber(text))
+  }
+
+  export function groupBy3Numbers(text: string | number | undefined | null) {
+    if (text !== undefined && text !== null) {
+      let valueString = ''
+      if (typeof (text) === 'number') {
+        valueString = deformatNumberToPureString(text.toString())
+      } else {
+        valueString = text
+      }
+      if (valueString.includes('.')) {
+        const left = valueString.split('.')[0]
+        const right = valueString.split('.')[1]
+        return left.replace(/(?<=\d)(?=(\d\d\d)+(?!\d))/g, ',') + '.' + right
+      } else {
+        return valueString.replace(/(?<=\d)(?=(\d\d\d)+(?!\d))/g, ',')
+      }
+    }
+    return ''
+  }
+
 }
