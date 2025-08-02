@@ -1,5 +1,5 @@
 {
-  "name": "@kk-vv/ts-gc",
+  "name": "@move.box/ts-gc",
   "version": "1.0.0",
   "bin": {
     "create": "./bin/index.js"

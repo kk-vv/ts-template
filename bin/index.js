@@ -5,9 +5,9 @@ const fs = require('fs-extra')
 const prompts = require('prompts');
 
 program
-  .version('1.0.0')
-  .command('generate')
-  .description('Generate a new project from template')
+  .version('1.0.1')
+  .command('create')
+  .description('Create a new project from template')
   .action(async () => {
 
     const answers = await prompts(
@@ -44,7 +44,7 @@ program
     };
     processFiles(outputDir);
 
-    console.log(`Project ${answers.name} generated successfully!`);
+    console.log(`Project ${answers.name} created successfully!`);
   });
 
 program.parse(process.argv);
