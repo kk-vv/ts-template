@@ -1,18 +1,20 @@
 {
-  "name": "kkvv-template",
+  "name": "kkvv-template-generator",
   "version": "1.0.0",
+  "bin": {
+    "kkvv-template": "./bin/index.js"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
-    "test": "ts-node test.ts"
+    "start": "node ./bin/index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+  "author": "https://github.com/kk-vv/",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^14.0.0",
+    "fs-extra": "^11.3.0",
+    "prompts": "^2.4.2"
   }
 }
