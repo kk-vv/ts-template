@@ -1,13 +1,13 @@
 {
-  "name": "@kk-vv/ts-template-generator",
+  "name": "@kk-vv/ts-gc",
   "version": "1.0.0",
   "bin": {
-    "kkvv-template": "./bin/index.js"
+    "create": "./bin/index.js"
   },
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./bin/index.js"
+    "create": "node ./bin/index.js"
   },
   "keywords": [
     "template",
