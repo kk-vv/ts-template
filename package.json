@@ -10,14 +10,14 @@
     "start": "node ./bin/index.js"
   },
   "keywords": [
-    "template",
+    "ts express template",
     "generator",
     "cli",
     "ts"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kk-vv/ts-template"
+    "url": "https://github.com/kk-vv/ts-gc-express"
   },
   "author": "kk-vv",
   "license": "MIT",
