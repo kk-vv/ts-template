@@ -1,13 +1,13 @@
 {
-  "name": "@move.box/ts-gc",
-  "version": "1.0.1",
+  "name": "@move.box/ts-gc-express",
+  "version": "1.0.0",
   "bin": {
-    "create": "./bin/index.js"
+    "tc-gc-express": "./bin/index.js"
   },
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create": "node ./bin/index.js"
+    "start": "node ./bin/index.js"
   },
   "keywords": [
     "template",

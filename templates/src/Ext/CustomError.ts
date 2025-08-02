@@ -1,3 +1,4 @@
+import z from "zod"
 
 export enum CustomErrorCode {
   paramsError = 10001,
@@ -37,5 +38,15 @@ export class CustomError extends Error {
 
   errorMessage() {
     return `${this.name}|${this.reason}`
+  }
+}
+
+export function bizError(error: any) {
+  if (error instanceof CustomError) {
+    return error
+  } else if (error instanceof z.ZodError) {
+    return new CustomError(CustomErrorCode.paramsError, { name: 'ParamsError', reason: error.message, cause: error })
+  } else {
+    return new CustomError(CustomErrorCode.unknowError, { cause: error })
   }
 }
