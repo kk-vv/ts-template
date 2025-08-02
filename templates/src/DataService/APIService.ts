@@ -48,13 +48,16 @@ export namespace APIService {
       }
       const result = await response.json()
       if (result.status === undefined) {
-        throw new Error('Invalid data response')
+        throw new APIServiceError(APIServiceErrorCode.unknown, 'Invalid data response.')
       } else if (result.status === 1) {
         return result
       } else {
-        throw new APIServiceError(result.code ?? APIServiceErrorCode.unknown, result.msg ?? 'Invalid data response.')
+        throw new APIServiceError(result.code ?? APIServiceErrorCode.unknown, result.message ?? 'Invalid data response.')
       }
     } catch (error) {
+      if (error instanceof APIServiceError) {
+        throw error
+      }
       throw new APIServiceError(APIServiceErrorCode.unknown, `${error}`)
     }
   }
@@ -67,7 +70,6 @@ export namespace APIService {
       } else {
         throw new APIServiceError(APIServiceErrorCode.invaliddata, 'Invalid data response.')
       }
-
     } catch (error) {
       throw error
     }
