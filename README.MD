@@ -6,7 +6,12 @@
 
 #### Dev
 
-- npm run dev
+- Run dev 
+
+```
+npm install
+npm run dev
+```
 
 - [view status](http://localhost:8899)
 - [view todo list](http://localhost:8899/todo/list)
