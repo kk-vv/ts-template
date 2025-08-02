@@ -1,0 +1,14 @@
+version: '3.8'
+name: __name__-service
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # network_mode: "host"
+    container_name: __name__-service
+    image: __name__-service:latest
+    ports:
+      - 8899:8899
+    environment:
+      - NODE_ENV=production
