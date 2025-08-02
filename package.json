@@ -1,8 +1,8 @@
 {
   "name": "@move.box/ts-gc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "bin": {
-    "create": "./bin/index.js"
+    "ts-gc": "./bin/index.js"
   },
   "description": "",
   "main": "index.js",
