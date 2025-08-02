@@ -1,5 +1,5 @@
 ### Usage
 
 ```
-npx @kk-vv/ts-gc create
+npx @move.box/ts-gc create
 ```
