@@ -7,7 +7,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create": "node ./bin/index.js"
+    "start": "node ./bin/index.js"
   },
   "keywords": [
     "template",
