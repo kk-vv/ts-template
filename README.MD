@@ -67,3 +67,11 @@ test()
 #### Pro
 
 - npm run start
+
+#### Deploy with docker
+
+
+```
+docker-compose build
+docker-compose up -d
+```
