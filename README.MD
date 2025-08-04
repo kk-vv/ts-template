@@ -1,6 +1,6 @@
 ### Create
 
-- npx @move.box/ts-gc create
+- npx @move.box/ts-gc@latest create
 
 ### Common Utils
 
