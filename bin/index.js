@@ -44,6 +44,13 @@ program
     };
     processFiles(outputDir);
 
+    // Rename .gitignore.template to .gitignore, because NPM will discard .gitignore file
+    const gitignoreTemplatePath = path.join(outputDir, '.gitignore.template');
+    const gitignorePath = path.join(outputDir, '.gitignore');
+    if (fs.existsSync(gitignoreTemplatePath)) {
+      fs.renameSync(gitignoreTemplatePath, gitignorePath);
+    }
+
     console.log(`Project ${answers.name} created successfully!`);
   });
 
