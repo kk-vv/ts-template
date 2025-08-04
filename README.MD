@@ -32,6 +32,15 @@ POST
 addresses: string[]
 ```
 
+- /eth/tx/status
+
+```
+POST
+hash: string
+```
+
+- ... more in EVMRPC
+
 
 #### Prod
 
