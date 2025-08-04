@@ -28,11 +28,15 @@ export class CustomError extends Error {
   reason?: string
 
   constructor(code: CustomErrorCode | number, option?: { name?: string, reason?: string, cause?: unknown }) {
-    super(option?.reason ?? CustomErrorCode.messageBy(code))
+    let reason = option?.reason
+    if (!reason && option?.cause) {
+      reason = (option.cause as any).message || (option.cause as any).msg || `${option.cause}`
+    }
+    super(reason ?? CustomErrorCode.messageBy(code))
     this.cause = option?.cause
     this.code = code
     this.name = option?.name || CustomErrorCode.messageBy(code)
-    this.reason = option?.reason
+    this.reason = reason
   }
 
   errorMessage() {
