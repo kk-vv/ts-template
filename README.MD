@@ -1,6 +1,6 @@
 ### Create
 
-- npx @move.box/ts-gc-express create
+- npx @move.box/ts-gc-express@latest create
 
 ### Start
 
