@@ -1,10 +1,9 @@
-import z from "zod"
-
 export enum CustomErrorCode {
   paramsError = 10001,
   unknowError = 20001,
   internalError = 30001,
-  bizError = 40001
+  bizError = 40001,
+  logsStringTooLong = -32008
 }
 
 export namespace CustomErrorCode {
@@ -18,6 +17,8 @@ export namespace CustomErrorCode {
         return 'System internal error'
       case CustomErrorCode.bizError:
         return 'Biz error'
+      case CustomErrorCode.logsStringTooLong:
+        return 'Logs string too long'
       default:
         return 'Unknow error'
     }
@@ -29,24 +30,18 @@ export class CustomError extends Error {
   reason?: string
 
   constructor(code: CustomErrorCode | number, option?: { name?: string, reason?: string, cause?: unknown }) {
-    super(option?.reason ?? CustomErrorCode.messageBy(code))
+    let reason = option?.reason
+    if (!reason && option?.cause) {
+      reason = (option.cause as any).message || (option.cause as any).msg || `${option.cause}`
+    }
+    super(reason ?? CustomErrorCode.messageBy(code))
     this.cause = option?.cause
     this.code = code
     this.name = option?.name || CustomErrorCode.messageBy(code)
-    this.reason = option?.reason
+    this.reason = reason
   }
 
   errorMessage() {
     return `${this.name}|${this.reason}`
-  }
-}
-
-export function bizError(error: any) {
-  if (error instanceof CustomError) {
-    return error
-  } else if (error instanceof z.ZodError) {
-    return new CustomError(CustomErrorCode.paramsError, { name: 'ParamsError', reason: error.message, cause: error })
-  } else {
-    return new CustomError(CustomErrorCode.unknowError, { cause: error })
   }
 }

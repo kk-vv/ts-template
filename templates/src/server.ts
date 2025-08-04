@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express'
 import cors from 'cors'
 import { LogPrefix } from './Utils/LogPrefix'
-import { bizError } from './Ext/CustomError'
 import logger from './Utils/Logger'
 import { APIErrorResponse } from './Main/APIModels/APIResponse'
 import MainRoutes from './Main/Routes/MainRoutes'
-import TodoListRoutes from './Main/Routes/TodoListRoutes'
+import ETHRPCRoutes from './Main/Routes/ETHRPCRoutes'
+import { bizError } from './Main/Errors/BizError'
 
 const app = express()
 const port = parseInt(process.env.PORT || "8899", 10)
@@ -19,7 +19,7 @@ app.use(express.json())
 
 // mount routes
 app.use('/', MainRoutes)
-app.use('/todo', TodoListRoutes)
+app.use('/eth', ETHRPCRoutes)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hyper sign api service!')
