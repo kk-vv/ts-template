@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const prompts = require('prompts');
 
 program
-  .version('1.2.0')
+  .version('1.3.0')
   .command('create')
   .description('Create a new project from template')
   .action(async () => {
@@ -18,9 +18,11 @@ program
       },
     );
 
+    const name = answers.name.trim()
+
     const templateSrcDir = path.join(__dirname, '../templates/src');
     const templateConfigsDir = path.join(__dirname, '../templates/configs');
-    const outputDir = path.join(process.cwd(), answers.name);
+    const outputDir = path.join(process.cwd(), name);
     const outputSrcDir = path.join(outputDir, 'src');
 
     // Copy templates
@@ -37,7 +39,7 @@ program
           processFiles(filePath);
         } else if (stats.isFile()) {
           let content = fs.readFileSync(filePath, 'utf8');
-          content = content.replace(/__name__/g, answers.name);
+          content = content.replace(/__name__/g, name);
           fs.writeFileSync(filePath, content);
         }
       });
@@ -51,7 +53,7 @@ program
       fs.renameSync(gitignoreTemplatePath, gitignorePath);
     }
 
-    console.log(`Project ${answers.name} created successfully!`);
+    console.log(`Project ${name} created successfully!`);
   });
 
 program.parse(process.argv);
