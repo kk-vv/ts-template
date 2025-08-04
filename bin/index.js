@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const prompts = require('prompts');
 
 program
-  .version('1.1.0')
+  .version('1.1.1')
   .command('create')
   .description('Create a new project from template')
   .action(async () => {
@@ -24,8 +24,8 @@ program
     const outputSrcDir = path.join(outputDir, 'src');
 
     // Copy templates
-    fs.copySync(templateSrcDir, outputSrcDir);
-    fs.copySync(templateConfigsDir, outputDir);
+    fs.copySync(templateSrcDir, outputSrcDir, { filter: () => true });
+    fs.copySync(templateConfigsDir, outputDir, { filter: () => true });
 
         // Replace placeholders
     const processFiles = (dir) => {

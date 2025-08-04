@@ -1,6 +1,6 @@
 {
   "name": "@move.box/ts-gc-express",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "bin": {
     "tc-gc-express": "./bin/index.js"
   },
