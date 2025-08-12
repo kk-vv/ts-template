@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const prompts = require('prompts');
 
 program
-  .version('1.3.1')
+  .version('1.4.0')
   .command('create')
   .description('Create a new project from template')
   .action(async () => {
