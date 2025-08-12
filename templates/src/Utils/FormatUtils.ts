@@ -22,7 +22,8 @@ export namespace FormatUtils {
         return fixStr
       }
     } else {
-      const shitNumberMatchGroups = shitNumber.match(/0\.0\{(\d)\}(\d+)/)
+      const shitfortmatNumer = revertSubSymbol(shitNumber)
+      const shitNumberMatchGroups = shitfortmatNumer.match(/0\.0\{(\d+)\}(\d+)/)
       if (shitNumberMatchGroups && shitNumberMatchGroups.length === 3) { //shit number 0.0{5}1234
         const fixStr = '0.' + '0'.repeat(Number(shitNumberMatchGroups[1])) + shitNumberMatchGroups[2]
         return fixStr
@@ -64,52 +65,6 @@ export namespace FormatUtils {
     } else {
       return numbers[0] + '0'.repeat(decimal)
     }
-  }
-
-  export function removeDecimalTailZeros(text: string) {
-    return text.replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/, "")
-  }
-
-  export function formatTokenPrice(price: string | number | undefined | null, placeholder: string = '--') {
-    if (price !== undefined && price !== null) {
-      return '$' + shitNumber(price)
-    }
-    return placeholder
-  }
-
-  ///with currency symbol compact by k M B T P E 
-  export function formatMCap(amount: string | number | undefined | null, symbol: string = '$', placeholder: string = '--') {
-    if (amount !== undefined && amount !== null) {
-      return symbol + formatQuantity(amount)
-    }
-    return placeholder
-  }
-
-  /// compact by k M B T P E or shitnumber
-  export function formatQuantity(balance: string | number | undefined | null, placeholder: string = '--') {
-    if (balance !== undefined && balance !== null) {
-      let num = 0
-      if (typeof (balance) === 'string') {
-        const value = Number(balance)
-        if (isNaN(value)) {
-          return '0'
-        }
-        num = value
-      } else {
-        num = balance
-      }
-
-      if (num > 1) {
-        return compactNumber(balance, 2)
-      } else {
-        return shitNumber(num)
-      }
-    }
-    return placeholder
-  }
-
-  export function formatTokenSupply(supply: string | number) {
-    return compactNumber(supply, 0)
   }
 
   export function shitNumber(number: string | number, tailValidNumberCount: number = 4, limitZeroCount: number = 4) {
@@ -209,8 +164,27 @@ export namespace FormatUtils {
     })
   }
 
-  export function toTradingViewNumber(text: string | number) {
-    return fixToSubSymbol(shitNumber(text))
+  export function revertSubSymbol(v: string) {
+    const subscriptToNormalMap: { [key: string]: string } = {
+      '₀': '0',
+      '₁': '1',
+      '₂': '2',
+      '₃': '3',
+      '₄': '4',
+      '₅': '5',
+      '₆': '6',
+      '₇': '7',
+      '₈': '8',
+      '₉': '9'
+    }
+    return v.replace(/[₀-₉]+/g, (match: string) => {
+      const normalDigits = match.split('').map(digit => subscriptToNormalMap[digit] || digit).join('')
+      return `{${normalDigits}}`
+    })
+  }
+
+  export function toTradingViewNumber(text: string | number, tailValidNumberCount: number = 4, limitZeroCount: number = 4) {
+    return fixToSubSymbol(shitNumber(text, tailValidNumberCount, limitZeroCount))
   }
 
   export function groupBy3Numbers(text: string | number | undefined | null) {
@@ -230,6 +204,52 @@ export namespace FormatUtils {
       }
     }
     return ''
+  }
+
+  export function removeDecimalTailZeros(text: string) {
+    return text.replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/, "")
+  }
+
+  export function formatTokenPrice(price: string | number | undefined | null, placeholder: string = '--') {
+    if (price !== undefined && price !== null) {
+      return '$' + shitNumber(price)
+    }
+    return placeholder
+  }
+
+  ///with currency symbol compact by k M B T P E 
+  export function formatMCap(amount: string | number | undefined | null, symbol: string = '$', placeholder: string = '--') {
+    if (amount !== undefined && amount !== null) {
+      return symbol + formatQuantity(amount)
+    }
+    return placeholder
+  }
+
+  /// compact by k M B T P E or shitnumber
+  export function formatQuantity(balance: string | number | undefined | null, placeholder: string = '--') {
+    if (balance !== undefined && balance !== null) {
+      let num = 0
+      if (typeof (balance) === 'string') {
+        const value = Number(balance)
+        if (isNaN(value)) {
+          return '0'
+        }
+        num = value
+      } else {
+        num = balance
+      }
+
+      if (num > 1) {
+        return compactNumber(balance, 2)
+      } else {
+        return shitNumber(num)
+      }
+    }
+    return placeholder
+  }
+
+  export function formatTokenSupply(supply: string | number) {
+    return compactNumber(supply, 0)
   }
 
 }
